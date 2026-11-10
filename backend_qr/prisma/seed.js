@@ -12,12 +12,16 @@ const { Pool } = pg;
 // CONEXIÓN A POSTGRESQL
 // ============================================================
 
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+    throw new Error(
+        'DATABASE_URL no está definida. Configúrala en el entorno antes de ejecutar el seed.'
+    );
+}
+
 const pool = new Pool({
-    user: 'postgres',
-    password: '1234',
-    host: 'localhost',
-    port: 5432,
-    database: 'pase_lista_qr'
+    connectionString
 });
 
 const adapter = new PrismaPg(pool);
