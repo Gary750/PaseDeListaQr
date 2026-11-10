@@ -14,7 +14,7 @@ const limpiarTexto = (valor) => {
  */
 export const obtenerAlumnos = async (req, res) => {
     try {
-        const alumnos = await prisma.Alumno.findMany({
+        const alumnos = await prisma.alumno.findMany({
             include: {
                 Grupo: true,
                 Tutor: true
