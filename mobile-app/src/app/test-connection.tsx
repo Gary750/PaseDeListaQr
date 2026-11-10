@@ -6,7 +6,7 @@ const TestConnectionScreen: React.FC = () => {
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
     const [responseMessage, setResponseMessage] = useState<string>("  ");
-    const API_URL = 'http://192.168.137.99:3000/api/test-connection';
+    const API_URL = 'https://pasedelistaqr.onrender.com/api/test-connection';
 
     //FUNCIÓN PARA PROBAR LA CONEXIÓN CON EL BACKEND
     const handleTestConnection = async () => {
