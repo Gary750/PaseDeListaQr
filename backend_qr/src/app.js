@@ -34,7 +34,7 @@ const allowedOrigins = [
   "http://localhost:8081",
   "https://0hffwew-anonymous-8081.exp.direct",
   "https://pasedelistaqr.onrender.com",
-  "https://frontend-qr-app.onrender.com/"
+  "https://frontend-qr-app.onrender.com"
 ];
 
 app.use(cors({
