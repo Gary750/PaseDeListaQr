@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api";
+const API_URL = "https://pasedelistaqr.onrender.com/api";
 
 function RegistrarAsistencia({ alVolver, onAsistenciaCreada }) {
     const [matricula, setMatricula] = useState("");

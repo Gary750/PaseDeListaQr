@@ -1,5 +1,5 @@
 // C:\Users\ucbcr\OneDrive\Escritorio\Repositorios\pase_lista\frontend_qr\src\services\maestroService.js
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://pasedelistaqr.onrender.com/api';
 
 
 export const getMaestros = async () => {

@@ -31,7 +31,7 @@ function Register() {
 
         try {
             // 4. Hacemos la petición POST al backend
-            const response = await axios.post("http://localhost:3000/api/auth/register", {
+            const response = await axios.post("https://pasedelistaqr.onrender.com/api/auth/register", {
                 nombre: nombre,
                 email: correo, // El backend espera 'email', le pasamos nuestro estado 'correo'
                 password: password,
