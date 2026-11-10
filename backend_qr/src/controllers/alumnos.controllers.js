@@ -1,4 +1,3 @@
-
 import prisma from "../config/prisma.js";
 
 /**
@@ -14,7 +13,7 @@ const limpiarTexto = (valor) => {
  */
 export const obtenerAlumnos = async (req, res) => {
     try {
-        const alumnos = await prisma.alumno.findMany({
+        const alumnos = await prisma.Alumno.findMany({
             include: {
                 Grupo: true,
                 Tutor: true
@@ -85,7 +84,7 @@ export const crearAlumno = async (req, res) => {
         }
 
         // Evitar matrículas duplicadas.
-        const existente = await prisma.alumno.findUnique({
+        const existente = await prisma.Alumno.findUnique({
             where: {
                 matricula: matriculaLimpia
             }
@@ -98,7 +97,7 @@ export const crearAlumno = async (req, res) => {
             });
         }
 
-        const nuevoAlumno = await prisma.alumno.create({
+        const nuevoAlumno = await prisma.Alumno.create({
             data: {
                 matricula: matriculaLimpia,
                 nombre: nombreLimpio,
@@ -128,9 +127,6 @@ export const crearAlumno = async (req, res) => {
 
 /**
  * Importa alumnos enviados por el frontend como JSON.
- *
- * Cada registro se inserta en la base de datos.
- * Los duplicados y registros con errores se reportan por separado.
  */
 export const cargaMasivaAlumnos = async (req, res) => {
     try {
@@ -147,15 +143,12 @@ export const cargaMasivaAlumnos = async (req, res) => {
         const omitidos = [];
         const errores = [];
 
-        // Evitar que dos filas del mismo archivo compartan matrícula.
         const matriculasArchivo = new Set();
-
-        // Cache de grupos para no consultar repetidamente el mismo grupo.
         const gruposCache = new Map();
 
         for (let i = 0; i < alumnos.length; i++) {
             const alumno = alumnos[i];
-            const fila = i + 2; // Fila 1 normalmente contiene encabezados.
+            const fila = i + 2;
 
             try {
                 if (!alumno || typeof alumno !== "object") {
@@ -177,7 +170,6 @@ export const cargaMasivaAlumnos = async (req, res) => {
                 const telefono = limpiarTexto(alumno.telefono);
                 const grupoTexto = limpiarTexto(alumno.grupoId);
 
-                // Validación de los campos obligatorios.
                 if (!matricula || !nombre || !grupoTexto) {
                     errores.push({
                         fila,
@@ -187,7 +179,6 @@ export const cargaMasivaAlumnos = async (req, res) => {
                     continue;
                 }
 
-                // Detectar duplicados dentro del mismo archivo.
                 if (matriculasArchivo.has(matricula)) {
                     omitidos.push({
                         fila,
@@ -199,7 +190,6 @@ export const cargaMasivaAlumnos = async (req, res) => {
 
                 matriculasArchivo.add(matricula);
 
-                // Buscar el grupo por su ID o nombre.
                 let grupo = gruposCache.get(grupoTexto);
 
                 if (grupo === undefined) {
@@ -224,8 +214,7 @@ export const cargaMasivaAlumnos = async (req, res) => {
                     continue;
                 }
 
-                // Revisar si la matrícula ya existe en PostgreSQL.
-                const existente = await prisma.alumno.findUnique({
+                const existente = await prisma.Alumno.findUnique({
                     where: { matricula }
                 });
 
@@ -238,8 +227,7 @@ export const cargaMasivaAlumnos = async (req, res) => {
                     continue;
                 }
 
-                // INSERT REAL mediante Prisma.
-                const nuevoAlumno = await prisma.alumno.create({
+                const nuevoAlumno = await prisma.Alumno.create({
                     data: {
                         matricula,
                         nombre,
@@ -257,10 +245,7 @@ export const cargaMasivaAlumnos = async (req, res) => {
                 });
 
             } catch (errorFila) {
-                console.error(
-                    `Error al importar la fila ${fila}:`,
-                    errorFila
-                );
+                console.error(`Error al importar la fila ${fila}:`, errorFila);
 
                 if (errorFila.code === "P2002") {
                     omitidos.push({
@@ -362,7 +347,7 @@ export const actualizarAlumno = async (req, res) => {
             datos.grupoId = grupo.id;
         }
 
-        const alumnoActualizado = await prisma.alumno.update({
+        const alumnoActualizado = await prisma.Alumno.update({
             where: { matricula: id },
             data: datos
         });
@@ -392,7 +377,7 @@ export const eliminarAlumno = async (req, res) => {
     try {
         const { id } = req.params;
 
-        await prisma.alumno.delete({
+        await prisma.Alumno.delete({
             where: { matricula: id }
         });
 
